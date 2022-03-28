@@ -5,7 +5,7 @@ abstract class StateGame {}
 class StateGameInitialize extends StateGame {}
 
 class StateGameMarked extends StateGame {
-  final List<SquareStatus> status;
+  final List<SquareStatus?> status;
 
   StateGameMarked(this.status);
 }

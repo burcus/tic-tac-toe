@@ -21,7 +21,7 @@ class _PageMainState extends State<PageMain> {
   }
 
   void markContainer(int index) {
-    SquareStatus status = SquareStatus(BlocGame().currentPlayer, false);
+    SquareStatus status = SquareStatus(BlocGame().currentPlayer, false, index);
     BlocGame().add(EventGameMark(status));
   }
 
@@ -53,14 +53,15 @@ class _PageMainState extends State<PageMain> {
                 builder: (context, state) {
                   if (state is StateGameMarked) {
                     return GridView.builder(
-                      itemCount: 16,
+                      itemCount: 9,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
+                        crossAxisCount: 3,
                       ),
                       itemBuilder: (context, index) {
+                        SquareStatus? status = state.status[index];
                         return GestureDetector(
                           onTap: () {
                             markContainer(index);
@@ -69,18 +70,26 @@ class _PageMainState extends State<PageMain> {
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.white10),
                             ),
+                            child: status == null
+                                ? SizedBox.shrink()
+                                : Center(
+                                  child: Text(
+                                      status.player.playerName == "1" ? "X" : "O",
+                                      style: CustomTheme.mark,
+                                    ),
+                                ),
                           ),
                         );
                       },
                     );
                   } else {
                     return GridView.builder(
-                      itemCount: 16,
+                      itemCount: 9,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
+                        crossAxisCount: 3,
                       ),
                       itemBuilder: (context, index) {
                         return GestureDetector(
