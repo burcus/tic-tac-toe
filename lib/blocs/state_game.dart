@@ -13,8 +13,9 @@ class StateGameMarked extends StateGame {
 
 class StateGameRoundEnded extends StateGame {
   final List<Player> players;
+  final Player winner;
 
-  StateGameRoundEnded(this.players);
+  StateGameRoundEnded(this.players, this.winner);
 }
 
 class StateGameEnded extends StateGame {}

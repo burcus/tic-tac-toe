@@ -16,7 +16,7 @@ class BlocGame extends Bloc<EventGame, StateGame> {
 
   static const int ROUND_LIMIT = 5;
 
-  Player player1 = Player("1", 0, 1);
+  Player player1 = Player("1", 0, 1); //TODO get name from user
   Player player2 = Player("2", 0, 2);
 
   List<SquareStatus?> status = [];
@@ -59,6 +59,7 @@ class BlocGame extends Bloc<EventGame, StateGame> {
       }
       isThereWinner = currentColumn.every((e) => e == 1) ||
           currentColumn.every((e) => e == 2);
+      if (isThereWinner) break;
     }
     return isThereWinner;
   }
@@ -85,7 +86,6 @@ class BlocGame extends Bloc<EventGame, StateGame> {
   }
 
   bool checkStatusList() {
-    print(checkRows() || checkColumns() || checkDiagonal());
     return checkRows() || checkColumns() || checkDiagonal();
   }
 
@@ -100,11 +100,13 @@ class BlocGame extends Bloc<EventGame, StateGame> {
       if (currentPlayer.playerScore == ROUND_LIMIT)
         emit(StateGameEnded());
       else
-        emit(StateGameRoundEnded([player1, player2]));
+        emit(StateGameRoundEnded([player1, player2], currentPlayer));
     }
   }
 
   void startParameters(event, state) {
+    player1.playerScore = 0;
+    player2.playerScore = 0;
     currentPlayer = player1;
     status = List.generate(9, (index) => null);
     gameBoard = List.generate(3, (i) => List.filled(3, -1, growable: false),
