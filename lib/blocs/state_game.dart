@@ -1,3 +1,4 @@
+import 'package:tic_tac_toe/models/player.dart';
 import 'package:tic_tac_toe/models/square_status.dart';
 
 abstract class StateGame {}
@@ -10,4 +11,8 @@ class StateGameMarked extends StateGame {
   StateGameMarked(this.status);
 }
 
-class StateGameRoundEnded extends StateGame {}
+class StateGameRoundEnded extends StateGame {
+  final List<Player> players;
+
+  StateGameRoundEnded(this.players);
+}

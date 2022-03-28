@@ -36,34 +36,62 @@ class BlocGame extends Bloc<EventGame, StateGame> {
     print("current gameBoard = ${gameBoard}");
   }
 
-  void checkStatusList() {
+  bool checkRows() {
     bool isThereWinner = false;
+
     for (List<int> row in gameBoard) {
       if (row.every((column) => column == 1) ||
           row.every((column) => column == 2)) {
         isThereWinner = true;
       }
     }
+    return isThereWinner;
+  }
 
-    for (int i = 0; i < gameBoard[0].lenght; i++) {
-      bool same = true;
-      for (int y = 0; i < gameBoard[0].length; y++) {
-        if (gameBoard[i][y] == 1)
-          break;
-        else {
-          same = false;
-        }
+  bool checkColumns() {
+    late bool isThereWinner;
+    for (int i = 0; i < 3; i++) {
+      List<int> currentColumn = [];
+      for (int y = 0; y < 3; y++) {
+        currentColumn.add(gameBoard[y][i]);
+      }
+      isThereWinner = currentColumn.every((e) => e == 1) ||
+          currentColumn.every((e) => e == 2);
+    }
+    return isThereWinner;
+  }
+
+  bool checkDiagonal() {
+    List<int> diagonal = [];
+    for (int i = 0; i < 3; i++) {
+      diagonal.add(gameBoard[i][i]);
+    }
+    bool isThereWinner =
+        diagonal.every((e) => e == 1) || diagonal.every((e) => e == 2);
+
+    if (!isThereWinner) {
+      diagonal.clear();
+      for (int i = 0; i < 3; i++) {
+        //TODO check
       }
     }
-    print(isThereWinner);
+    return isThereWinner;
+  }
+
+  bool checkStatusList() {
+    return checkRows() || checkColumns() || checkDiagonal();
   }
 
   void mark(EventGameMark event, emit) {
     status[event.status.index] = event.status;
     markGameBoard(event.status);
-    checkStatusList();
-    currentPlayer = nextPlayer;
-    emit(StateGameMarked(status));
+    if (checkStatusList()) {
+      currentPlayer = nextPlayer;
+      emit(StateGameMarked(status));
+    } else {
+      currentPlayer.playerScore += 1;
+      emit(StateGameRoundEnded([player1, player2]));
+    }
   }
 
   void startParameters(event, state) {

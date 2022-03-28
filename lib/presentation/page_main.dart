@@ -63,9 +63,11 @@ class _PageMainState extends State<PageMain> {
                       itemBuilder: (context, index) {
                         SquareStatus? status = state.status[index];
                         return GestureDetector(
-                          onTap: () {
-                            markContainer(index);
-                          },
+                          onTap: status == null || status.isEmpty
+                              ? () {
+                                  markContainer(index);
+                                }
+                              : () {},
                           child: Container(
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.white10),
@@ -73,11 +75,13 @@ class _PageMainState extends State<PageMain> {
                             child: status == null
                                 ? SizedBox.shrink()
                                 : Center(
-                                  child: Text(
-                                      status.player.playerName == "1" ? "X" : "O",
+                                    child: Text(
+                                      status.player.playerName == "1"
+                                          ? "X"
+                                          : "O",
                                       style: CustomTheme.mark,
                                     ),
-                                ),
+                                  ),
                           ),
                         );
                       },
