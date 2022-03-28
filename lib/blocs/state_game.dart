@@ -16,3 +16,5 @@ class StateGameRoundEnded extends StateGame {
 
   StateGameRoundEnded(this.players);
 }
+
+class StateGameEnded extends StateGame {}

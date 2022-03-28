@@ -14,6 +14,8 @@ class BlocGame extends Bloc<EventGame, StateGame> {
 
   factory BlocGame() => _blocInstance;
 
+  static const int ROUND_LIMIT = 5;
+
   Player player1 = Player("1", 0, 1);
   Player player2 = Player("2", 0, 2);
 
@@ -70,27 +72,35 @@ class BlocGame extends Bloc<EventGame, StateGame> {
         diagonal.every((e) => e == 1) || diagonal.every((e) => e == 2);
 
     if (!isThereWinner) {
+      int columnIndex = gameBoard[0].length - 1;
       diagonal.clear();
       for (int i = 0; i < 3; i++) {
-        //TODO check
+        diagonal.add(gameBoard[i][columnIndex]);
+        columnIndex = columnIndex - 1;
       }
+      isThereWinner =
+          diagonal.every((e) => e == 1) || diagonal.every((e) => e == 2);
     }
     return isThereWinner;
   }
 
   bool checkStatusList() {
+    print(checkRows() || checkColumns() || checkDiagonal());
     return checkRows() || checkColumns() || checkDiagonal();
   }
 
   void mark(EventGameMark event, emit) {
     status[event.status.index] = event.status;
     markGameBoard(event.status);
-    if (checkStatusList()) {
+    if (!checkStatusList()) {
       currentPlayer = nextPlayer;
       emit(StateGameMarked(status));
     } else {
       currentPlayer.playerScore += 1;
-      emit(StateGameRoundEnded([player1, player2]));
+      if (currentPlayer.playerScore == ROUND_LIMIT)
+        emit(StateGameEnded());
+      else
+        emit(StateGameRoundEnded([player1, player2]));
     }
   }
 
