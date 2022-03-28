@@ -62,13 +62,15 @@ class _PageMainState extends State<PageMain> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 72),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      scoreSection("Player 1", 1),
-                      Spacer(),
-                      scoreSection("Player 2", 2),
-                    ],
+                  child: Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        scoreSection("Player 1", 1),
+                        Spacer(),
+                        scoreSection("Player 2", 2),
+                      ],
+                    ),
                   ),
                 ),
                 Flexible(
@@ -186,13 +188,11 @@ class _PageMainState extends State<PageMain> {
         ),
         SizedBox(
           height: 10,
-        ),
-        /*
+        ),/* TODO show scores
         BlocBuilder(
           builder: (context, state) {
             if (state is StateGameRoundEnded) {
-              return Text(state.players[playerOrder - 1].playerScore.toString(),
-                  style: CustomTheme.heading);
+              return SizedBox.shrink();
             } else {
               return Text(BlocGame().player1.playerScore.toString(),
                   style: CustomTheme.heading);
