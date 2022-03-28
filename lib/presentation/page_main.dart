@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tic_tac_toe/blocs/bloc_game.dart';
+import 'package:tic_tac_toe/blocs/event_game.dart';
+import 'package:tic_tac_toe/blocs/state_game.dart';
 import 'package:tic_tac_toe/constants/custom_theme.dart';
+import 'package:tic_tac_toe/models/square_status.dart';
 
 class PageMain extends StatefulWidget {
   const PageMain({Key? key}) : super(key: key);
@@ -9,7 +14,16 @@ class PageMain extends StatefulWidget {
 }
 
 class _PageMainState extends State<PageMain> {
-  void markContainer() {}
+  @override
+  void initState() {
+    super.initState();
+    BlocGame().add(EventGameStart());
+  }
+
+  void markContainer(int index) {
+    SquareStatus status = SquareStatus(BlocGame().currentPlayer, false);
+    BlocGame().add(EventGameMark(status));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,21 +49,52 @@ class _PageMainState extends State<PageMain> {
           Flexible(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 32),
-              child: GridView.builder(
-                itemCount: 16,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                ),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: markContainer,
-                    child: Container(
-                      decoration:
-                          BoxDecoration(border: Border.all(color: Colors.white10)),
-                    ),
-                  );
+              child: BlocBuilder<BlocGame, StateGame>(
+                builder: (context, state) {
+                  if (state is StateGameMarked) {
+                    return GridView.builder(
+                      itemCount: 16,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                      ),
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            markContainer(index);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.white10),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return GridView.builder(
+                      itemCount: 16,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                      ),
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            markContainer(index);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.white10)),
+                          ),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),

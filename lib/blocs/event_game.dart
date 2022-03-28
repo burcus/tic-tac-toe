@@ -1,7 +1,11 @@
+import 'package:tic_tac_toe/models/square_status.dart';
+
 abstract class EventGame {}
 
-class EventGameChangePlayer {}
+class EventGameMark extends EventGame {
+  final SquareStatus status;
 
-class EventGameChangeScore {}
+  EventGameMark(this.status);
+}
 
-class EventGameMark{}
+class EventGameStart extends EventGame {}
